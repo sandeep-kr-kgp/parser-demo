@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<head>
+    <script type="text/javascript" src="CSV_Parser.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2f3640;
+            color: #dcdde1;
+            font-family: "Open Sans", verdana, arial, sans-serif;
+        }
+
+        label {
+            font-size: 15px;
+        }
+
+        .demo {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        #file-button {
+            background-color: #dcdde1;
+            color: #000;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        #notice {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo">
+        <fieldset>
+            <legend style="font-size: 17px; color:#f1c40f;">Parser Options:</legend>
+            <div>
+                <input type="checkbox" id='rows' name="interest" value="rows">
+                <label for="rows">Row-wise Array</label>
+            </div>
+            <div>
+                <input type="checkbox" id='columns' name="interest" value="columns">
+                <label for="columns">Column-wise Array</label>
+            </div>
+            <div>
+                <input type="checkbox" id='json' name="interest" value="json">
+                <label for="json">JSON</label>
+            </div>
+            <div>
+                <input type="checkbox" id='numeric' name="interest" value="numeric">
+                <label for="numeric">Parse Numeric Values</label>
+            </div>
+        </fieldset>
+        <input type="file" id="file" accept=".csv" onchange="handlefile()" style="display: none;">
+        <label id='file-button' for="file">Choose a CSV file</label>
+    </div>
+    <div id='notice'>Please check your console for results...</div>
+    <script>
+        function handlefile() {
+            var rows = document.getElementById('rows').checked;
+            var columns = document.getElementById('columns').checked;
+            var json = document.getElementById('json').checked;
+            var numeric = document.getElementById('numeric').checked;
+            var file = document.getElementById('file').files[0];
+            var reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function (e) {
+                var result = CSV_Parser(reader.result,
+                    {
+                        delimiter: ',',
+                        getRows: rows,
+                        getColumns: columns,
+                        getJSON: json,
+                        dataTyping: numeric
+                    }
+                );
+                console.log('%cParsed file: ', "color: yellow; font-size: 17px;");
+                console.log(result);
+            }
+            document.getElementById('file').value = '';
+        }
+    </script>
+</body>
+
+</html>
